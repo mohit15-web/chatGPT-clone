@@ -1,14 +1,16 @@
 import React from 'react'
 import logo from '../assets/images/logo.webp'
+import { SlNote } from "react-icons/sl";
 
 function Sidebar() {
   return (
     <div className='w-80 h-screen px-3 bg-gray-100 relative'>
-        <div className='fixed top-0 mt-4'>
+        <div className='absolute top-0 mt-4 flex justify-between items-center w-60'>
             <div className='flex items-center gap-2'>
                 <img src={logo} alt="logo" className='w-4'/>
                 <h1 className='font-bold'>New chat</h1>
             </div>
+            <SlNote className='font-bold'/>
         </div>
 
 

@@ -1,5 +1,5 @@
 import Sidebar from './components/Sidebar'
-import Body from './components/Body'
+import { Body } from './components/Body'
 
 function App() {
 
