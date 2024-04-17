@@ -1,5 +1,5 @@
 import { TextGenerateEffect } from "./TextGenrate";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../assets/images/logo.webp";
 import { FaArrowCircleUp } from "react-icons/fa";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -12,9 +12,18 @@ export function Body() {
   const [input, setInput] = useState("");
   const [text, setText] = useState("");
   const [showMessage, setShowMessage] = useState(false);
-  console.log(input);
+  const [showSearch, setShowSearch] = useState(false);
 
-  // const words = {text}
+  console.log(showSearch);
+  useEffect(() => {
+    if (text.length === 0) {
+      setShowSearch(false);
+    } else {
+      setShowSearch(true);
+    }
+  }, [text]);
+
+  const words = { text };
 
   async function handleSendData() {
     try {
@@ -22,9 +31,7 @@ export function Body() {
       const genAI = new GoogleGenerativeAI(API_KEY);
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-      const prompt = input;
-      // setText("");
-      const result = await model.generateContent(prompt);
+      const result = await model.generateContent(input);
       console.log(result);
       const response = result.response;
       console.log(response);
@@ -76,18 +83,25 @@ export function Body() {
           </div>
         </div>
       ) : null}
-      <div className="w-[69%]" id="dataContainer">
-        {
-          <div className="h-[60vh] overflow-scroll overflow-x-hidden">
-            {/* <div className="flex justify-center items-center gap-2">
-              <img src={logo} alt="" className="w-10" />
-              <h1>You</h1>
-            </div> */}
-            <div>
-              <TextGenerateEffect words={text} />
+      <div className="w-[69%] absolute top-20">
+        {showSearch && (
+          <div className=" h-[70vh] overflow-scroll overflow-x-hidden">
+            <div className="flex items-center gap-4">
+              <img src={logo} alt="" className="w-4" />
+              <h1 className="font-bold">You</h1>
+            </div>
+            <h1 className=" ml-8">{input}</h1>
+            <div className="mt-4">
+              <div className="flex items-center gap-4">
+                <img src={logo} alt="" className="w-4" />
+                <p className="font-bold">ChatGPT</p>
+              </div>
+              <div className="dataContainer ml-8">
+              <TextGenerateEffect words={text}/>
+              </div>
             </div>
           </div>
-        }
+        )}
       </div>
       <div
         className={`justify-center items-center ${
