@@ -7,13 +7,15 @@ import { FaAngleDown } from "react-icons/fa6";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { AiOutlineThunderbolt } from "react-icons/ai";
 import { BsStars } from "react-icons/bs";
+import { ClipLoader } from "react-spinners";
+import Markdown from "react-markdown";
 
 export function Body() {
   const [input, setInput] = useState("");
   const [text, setText] = useState("");
   const [showMessage, setShowMessage] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
-
+  const[loading,setLoading]=useState(false)
   console.log(showSearch);
   useEffect(() => {
     if (text.length === 0) {
@@ -26,6 +28,8 @@ export function Body() {
   const words = { text };
 
   async function handleSendData() {
+    console.log('btn clicked');
+    setLoading(true)
     try {
       const API_KEY = "AIzaSyAYhghPB47muOGdbJ-p26A7AUxRSxQ94cw"; // Replace with your API key
       const genAI = new GoogleGenerativeAI(API_KEY);
@@ -37,6 +41,8 @@ export function Body() {
       console.log(response);
       const generatedText = response.text();
       setText(generatedText);
+
+      setLoading(false)
     } catch (error) {
       console.error("Error while generating content:", error);
     }
@@ -97,13 +103,27 @@ export function Body() {
                 <p className="font-bold">ChatGPT</p>
               </div>
               <div className="dataContainer ml-8">
-              <TextGenerateEffect words={text}/>
+              <Markdown>
+              {text}
+                </Markdown>
               </div>
             </div>
           </div>
         )}
       </div>
-      <div
+      {loading ?(
+        <div>
+               <ClipLoader
+        // color={color}
+        // loading={loading}
+        // cssOverride={override}
+        size={60}
+        aria-label="Loading Spinner"
+        data-testid="loader"
+      />
+        </div>
+      ):(
+        <div
         className={`justify-center items-center ${
           text.length > 0 ? "hidden" : "flex"
         }`}
@@ -154,6 +174,7 @@ export function Body() {
           </div>
         </div>
       </div>
+      ) }
 
       <div className="absolute bottom-0 w-full flex flex-col items-center">
         <input
@@ -166,7 +187,7 @@ export function Body() {
         />
 
         <button
-          className="text-2xl absolute bottom-14 right-64"
+          className="text-3xl absolute bottom-14 top-2 right-64"
           onClick={handleSendData}
         >
           <FaArrowCircleUp />
